@@ -7,6 +7,7 @@ import sys
 import json
 from Adafruit_IO_Modified import MQTTClient
 from console_logging.console import Console
+import threading
 
 app = Flask(__name__)
 
@@ -75,9 +76,8 @@ def message(client, feed_id, message):
 
     print("Feed {0} received new value: {1}".format(feed_id, message))
     json_object = json.dumps(combined_data, indent=4)
-    console.log(combined_data)
-    # print(json_object)
-    # gcpPublish(combined_data, PROJECT_ID, TOPIC_ID)
+    # console.log(combined_data)
+    gcpPublish(combined_data, PROJECT_ID, TOPIC_ID)
 
 
 @app.route("/")
@@ -86,17 +86,15 @@ def hello_world():
 
 
 if __name__ == "__main__":
-    client = MQTTClient(ADAFRUIT_IO_USERNAME, ADAFRUIT_IO_KEY, secure=False)
-    console.log(ADAFRUIT_IO_USERNAME)
-    client.on_connect = connected
-    console.log("connected")
-    client.on_disconnect = disconnected
-    console.log("disconnected")
-    client.on_message = message
-    console.log("message")
-    client.connect()
-    console.log("connected")
-    client.loop_blocking()
-    console.log("loop_blocking")
 
-    app.run(host="0.0.0.0", port=port)
+    def run_mqtt_client():
+        client = MQTTClient(ADAFRUIT_IO_USERNAME, ADAFRUIT_IO_KEY, secure=False)
+        client.on_connect = connected
+        client.on_disconnect = disconnected
+        client.on_message = message
+        client.connect()
+        client.loop_blocking()
+
+    threading.Thread(target=run_mqtt_client).start()
+
+    app.run(host="0.0.0.0", port=port, debug=True)
