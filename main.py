@@ -15,14 +15,6 @@ load_dotenv()
 # config = dotenv_values(".env")
 # print(config)
 
-AIOKEY = "aio_jfcT64bO1hX3aM61To3K5vYibK8t"
-AIOUSER = "darktalent"
-DEVICEGROUP = "Default"
-CREDENTIAL_PATH = "privateKeyPubSubBQFB.json"
-PROJECT_ID = "analog-codex-400702"
-TOPIC_ID = "humiTempSound"
-BQ_TABLE_ID = "analog-codex-400702.humiTempSound.humiTempSoundSensors"
-FIRESTORE_DB = "humiTempSound"
 
 CREDENTIAL_PATH = os.getenv("CREDENTIAL_PATH")
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = CREDENTIAL_PATH
