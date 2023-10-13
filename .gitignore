@@ -4,3 +4,8 @@
 # GCPPrivateKey
 privateKeyPubSubBQFB.json
 
+.gitignore
+
+.vscode
+
+.DS_Store
