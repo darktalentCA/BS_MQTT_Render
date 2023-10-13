@@ -80,21 +80,22 @@ def message(client, feed_id, message):
     gcpPublish(combined_data, PROJECT_ID, TOPIC_ID)
 
 
+def run_mqtt_client():
+    client = MQTTClient(ADAFRUIT_IO_USERNAME, ADAFRUIT_IO_KEY, secure=False)
+    client.on_connect = connected
+    client.on_disconnect = disconnected
+    client.on_message = message
+    client.connect()
+    client.loop_blocking()
+
+
+threading.Thread(target=run_mqtt_client).start()
+
+
 @app.route("/")
 def hello_world():
     return "Hello World! I am running on port " + str(port)
 
 
 if __name__ == "__main__":
-
-    def run_mqtt_client():
-        client = MQTTClient(ADAFRUIT_IO_USERNAME, ADAFRUIT_IO_KEY, secure=False)
-        client.on_connect = connected
-        client.on_disconnect = disconnected
-        client.on_message = message
-        client.connect()
-        client.loop_blocking()
-
-    threading.Thread(target=run_mqtt_client).start()
-
     app.run(host="0.0.0.0", port=port, debug=True)
